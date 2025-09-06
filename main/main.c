@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: 2025 Jarif Junaeed <jarif_secure@proton.me>
+// SPDX-License-Identifier: MIT
+
 //TODO: finish writing all the sensor functions to read from the DS1820, HW-498(Analog Temp Sensor and don't use a library for this, manually implement this) and DHT11 then combine all of them to produce accurate
 //temps by fusing them, then display it on a 16X2 LCD and send over wifi 
 
@@ -121,7 +124,7 @@ esp_err_t read_DHT11(void) {
 
     //Start Signal
     // The reason I'm sending the start signal twice is for the sensor to give me update readings. Because for some reason
-    // it always gives me a reading from a previous time the first time I try, only on the second try does it give me an updated
+    // it always gives me a stale reading the first time I try, only on the second try does it give me an updated
     // reading. So, instead of figuring out why that is, I am just sending the start signal twice. 
     for(int attempt = 0; attempt < 2; attempt++ ){
         gpio_set_direction(DHT11_PIN, GPIO_MODE_OUTPUT);
