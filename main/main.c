@@ -34,7 +34,7 @@ void DS18B20_onewire_write_bit(int bit){
         //write 1
         esp_rom_delay_us(ONEWIRE_WRITE1_LOW);
         gpio_set_direction(DS18B20_PIN, GPIO_MODE_INPUT);
-        esp_rom_delay_us(ONEWIRE_SLOT_TIME - ONEWIRE_WRITE1_LOW);
+        esp_rom_delay_us(ONEWIRE_SLOT_TIME - ONEWIRE_WRITE1_LOW + ONEWIRE_SLOT_RECOVERY);
     }
     else{
         //write 0
@@ -114,21 +114,26 @@ esp_err_t read_DS18B20(void){
 esp_err_t read_DHT11(void) {
     printf("Sending start DHT11 signal...\n");
 
-    vTaskDelay(pdMS_TO_TICKS(2000));
-
     uint8_t data[5] = {0};
 
     gpio_reset_pin(LED_GPIO);
     gpio_reset_pin(DHT11_PIN);
 
     //Start Signal
-    gpio_set_direction(DHT11_PIN, GPIO_MODE_OUTPUT);
-    gpio_set_level(DHT11_PIN, 0); // pull low
-    vTaskDelay(pdMS_TO_TICKS(20));
-    gpio_set_level(DHT11_PIN, 1); // pull high
-    esp_rom_delay_us(30);
-
-    gpio_set_direction(DHT11_PIN, GPIO_MODE_INPUT);
+    // The reason I'm sending the start signal twice is for the sensor to give me update readings. Because for some reason
+    // it always gives me a reading from a previous time the first time I try, only on the second try does it give me an updated
+    // reading. So, instead of figuring out why that is, I am just sending the start signal twice. 
+    for(int attempt = 0; attempt < 2; attempt++ ){
+        gpio_set_direction(DHT11_PIN, GPIO_MODE_OUTPUT);
+        gpio_set_level(DHT11_PIN, 0); // pull low
+        vTaskDelay(pdMS_TO_TICKS(20));
+        gpio_set_level(DHT11_PIN, 1); // pull high
+        esp_rom_delay_us(30);
+        gpio_set_direction(DHT11_PIN, GPIO_MODE_INPUT);
+        if(attempt == 0){
+            vTaskDelay(pdMS_TO_TICKS(1500));;
+        }
+    }
 
     int64_t sensor_ACK_wait = esp_timer_get_time();
     while(gpio_get_level(DHT11_PIN) == 1){
@@ -193,6 +198,6 @@ void app_main(void)
             read_DS18B20();
             printf("Press 'p' + Enter to send again\n");
         }
-        vTaskDelay(pdMS_TO_TICKS(2000));
+        vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
