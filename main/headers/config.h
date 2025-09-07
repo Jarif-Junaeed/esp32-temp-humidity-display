@@ -24,6 +24,6 @@
 #define ONEWIRE_WRITE1_LOW    6    // µs low for writing '1'
 #define ONEWIRE_WRITE0_LOW    60   // µs low for writing '0'
 #define ONEWIRE_READ_INIT     2    // µs low to start read slot
-#define ONEWIRE_READ_SAMPLE   15   // µs from start to sample
+#define ONEWIRE_READ_SAMPLE   13   // µs from start to sample
 
 #endif // CONFIG_H
