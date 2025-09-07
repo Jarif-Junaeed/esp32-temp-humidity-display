@@ -9,6 +9,8 @@
 #include "esp_timer.h"
 
 #include "headers/config.h"
+#include "headers/DHT11.h"
+
 
 esp_err_t read_DHT11(void) {
     printf("Sending start DHT11 signal...\n");

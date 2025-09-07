@@ -9,7 +9,7 @@
 #include "esp_timer.h"
 
 #include "headers/config.h"
-#include "headers/read_DHT11.h"
+#include "headers/DHT11.h"
 
 void DS18B20_onewire_write_bit(int bit){
 
