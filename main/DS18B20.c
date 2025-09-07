@@ -1,5 +1,6 @@
 // SPDX-FileCopyrightText: 2025 Jarif Junaeed <jarif_secure@proton.me>
 // SPDX-License-Identifier: MIT
+#include <stdint.h>
 
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -64,7 +65,25 @@ static uint8_t DS18B20_onewire_read_byte(void){
     return value;
 }
 
-esp_err_t read_DS18B20(void){
+static uint8_t DS18B20_crc_check(const uint8_t *data, uint8_t len){
+    uint8_t crc = 0;
+
+    for(uint8_t i = 0; i < len; i++){
+        crc ^= data[i];
+        for(uint8_t j = 0; j < 8; j++){
+            if(crc & 0x01){
+                crc = (crc >> 1) ^ DS18B20_CRC8_POLY;
+            }
+            else{
+                crc >>= 1;
+            }
+        }
+    }
+
+    return crc;
+}
+
+static esp_err_t reset_DS18B20(void){
     esp_rom_delay_us(ONEWIRE_RESET_RELEASE);
     gpio_reset_pin(DS18B20_PIN);
 
@@ -88,8 +107,46 @@ esp_err_t read_DS18B20(void){
             return ESP_FAIL;
         }
     }
-
-    int64_t rx_wait = ONEWIRE_RESET_LOW_TIME - (esp_timer_get_time() - sensor_PRESCENCE_start);
-    esp_rom_delay_us(rx_wait);
     return ESP_OK;
+}
+
+esp_err_t read_DS18B20(void){
+
+    if (reset_DS18B20() != ESP_OK) {
+        printf("Failed to reset DS18B20 before conversion\n");
+        return ESP_FAIL;
+    }
+
+    DS18B20_onewire_write_byte(0xCC);
+    DS18B20_onewire_write_byte(0x44);
+
+    int64_t tconv_START_time = esp_timer_get_time();
+    while(!DS18B20_onewire_read_bit()){
+        if(esp_timer_get_time() - tconv_START_time > LONG_TIMEOUT){ //1 second timeout
+            return ESP_FAIL;
+        }
+    }
+
+    if (reset_DS18B20() != ESP_OK) {
+        printf("Failed to reset DS18B20 before reading\n");
+        return ESP_FAIL;
+    }
+
+    DS18B20_onewire_write_byte(0xCC);
+    DS18B20_onewire_write_byte(0xBE);
+    
+    uint8_t data[9];
+    for(int i = 0; i < 9; i++){
+        data[i]=DS18B20_onewire_read_byte();
+    }
+
+    if(DS18B20_crc_check(data, 8) != data[8]){
+        printf("CRC Mismatch!\n");
+        return ESP_FAIL;
+    }
+    else{
+        printf("CRC Match!\n");
+        return ESP_OK;
+    }
+
 }

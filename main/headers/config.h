@@ -12,7 +12,8 @@
 #define DS18B20_PIN GPIO_NUM_21
 
 // Timing constants
-#define TIMEOUT     1000 // µs
+#define TIMEOUT      1000    // µs, for 1ms timeouts
+#define LONG_TIMEOUT 1000000 // µs, for 1 second timeouts
 
 //DS18B20 Constants
 #define ONEWIRE_RESET_LOW_TIME 480  // Master reset pulse low time
@@ -20,10 +21,12 @@
 #define ONEWIRE_PRESENCE_WAIT  480  // Max wait for presence pulse
 #define ONEWIRE_SLOT_RECOVERY   1   // Min recovery between slots
 
-#define ONEWIRE_SLOT_TIME     60   // µs, total slot time
-#define ONEWIRE_WRITE1_LOW    6    // µs low for writing '1'
-#define ONEWIRE_WRITE0_LOW    60   // µs low for writing '0'
-#define ONEWIRE_READ_INIT     2    // µs low to start read slot
-#define ONEWIRE_READ_SAMPLE   13   // µs from start to sample
+#define ONEWIRE_SLOT_TIME     60    // µs, total slot time
+#define ONEWIRE_WRITE1_LOW    6     // µs low for writing '1'
+#define ONEWIRE_WRITE0_LOW    60    // µs low for writing '0'
+#define ONEWIRE_READ_INIT     2     // µs low to start read slot
+#define ONEWIRE_READ_SAMPLE   13    // µs from start to sample
+
+#define DS18B20_CRC8_POLY 0x8C      // Polynomial for DS18B20 8-bit CRC (X^8 + X^5 + X^4 + 1)
 
 #endif // CONFIG_H
