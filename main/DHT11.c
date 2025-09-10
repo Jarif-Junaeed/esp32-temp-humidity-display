@@ -9,17 +9,14 @@
 #include "driver/gpio.h"
 #include "esp_timer.h"
 
-#include "headers/config.h"
-#include "headers/DHT11.h"
+#include "config.h"
+#include "DHT11.h"
 
 
 esp_err_t read_DHT11(void) {
     printf("Sending start DHT11 signal...\n");
 
     uint8_t data[5] = {0};
-
-    gpio_reset_pin(LED_GPIO);
-    gpio_reset_pin(DHT11_PIN);
 
     //Start Signal
     // The reason I'm sending the start signal twice is for the sensor to give me updated readings. Because for some reason
