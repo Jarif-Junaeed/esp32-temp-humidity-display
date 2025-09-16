@@ -11,4 +11,6 @@
 // or ESP_FAIL if there is a communication error (e.g., timeout waiting for presence pulse).
 esp_err_t read_DS18B20(void);
 
+void DS18B20_init_pin(void);
+
 #endif
