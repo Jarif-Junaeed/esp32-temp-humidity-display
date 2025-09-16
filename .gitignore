@@ -5,5 +5,9 @@
 
 build/*
 
+# Ignore sdkconfig but allow the template
 sdkconfig*
 !sdkconfig.defaults
+
+#Ignore .git-credentials file to prevent secret leak
+.git-credentials
