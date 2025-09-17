@@ -84,7 +84,7 @@ esp_err_t read_DHT11(void) {
 
     int humidity = data[0];
     int temperature = data[2];
-    printf("Humidity = %d%%\nTemperature = %dc\n", humidity, temperature);
+    printf("DHT11 Humidity = %d%%\nDHT11 Temperature = %dc\n", humidity, temperature);
 
     return ESP_OK;
 }
