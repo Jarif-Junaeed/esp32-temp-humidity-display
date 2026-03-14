@@ -120,8 +120,8 @@ esp_err_t read_DS18B20(void){
         return ESP_FAIL;
     }
 
-    DS18B20_write_byte(0xCC);
-    DS18B20_write_byte(0x44);
+    DS18B20_write_byte(DS18B20_SKIP_ROM);
+    DS18B20_write_byte(DS18B20_CONVERT_T);
 
     int64_t tconv_START_time = esp_timer_get_time();
     while(esp_timer_get_time() - tconv_START_time < LONG_TIMEOUT){
@@ -136,8 +136,8 @@ esp_err_t read_DS18B20(void){
         return ESP_FAIL;
     }
 
-    DS18B20_write_byte(0xCC);
-    DS18B20_write_byte(0xBE);
+    DS18B20_write_byte(DS18B20_SKIP_ROM);
+    DS18B20_write_byte(DS18B20_READ_SPAD);
     
     uint8_t data[9];
     for(int i = 0; i < 9; i++){

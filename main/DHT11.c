@@ -24,7 +24,7 @@ esp_err_t read_DHT11(void) {
     //Start Signal
     // The reason I'm sending the start signal twice is for the sensor to give me updated readings. Because for some reason
     // it always gives me a stale reading the first time I try, only on the second try does it give me an updated
-    // reading. So, instead of figuring out why that is, I am just sending the start signal twice. 
+    // reading. So, as a temporary fix, I am just sending the start signal twice. 
     for(int attempt = 0; attempt < 2; attempt++ ){
         gpio_set_direction(DHT11_PIN, GPIO_MODE_OUTPUT);
         gpio_set_level(DHT11_PIN, 0); // pull low

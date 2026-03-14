@@ -23,8 +23,8 @@ void app_main(void){
         if (c == 'p' || c == 'P') {
             read_DHT11();
 
-            gpio_set_direction(DS18B20_PIN, GPIO_MODE_OUTPUT);
-            gpio_set_level(DS18B20_PIN, 0);
+            //gpio_set_direction(DS18B20_PIN, GPIO_MODE_OUTPUT);
+            //gpio_set_level(DS18B20_PIN, 0);
             gpio_set_direction(DS18B20_PIN, GPIO_MODE_INPUT);
             read_DS18B20();
             
