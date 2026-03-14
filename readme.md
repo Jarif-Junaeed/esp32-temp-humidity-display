@@ -35,7 +35,6 @@ A bare-metal ESP-IDF project for the ESP32 that reads temperature and humidity f
 │   │   ├── config.h       # Pin assignments, timing constants, DS18B20 command macros
 │   │   ├── DHT11.h        # DHT11 public API
 │   │   └── DS18B20.h      # DS18B20 public API
-│   ├── config.c           # (reserved for future use)
 │   ├── DHT11.c            # DHT11 protocol driver
 │   ├── DS18B20.c          # DS18B20 1-Wire protocol driver
 │   ├── main.c             # Entry point
